@@ -8,9 +8,23 @@ jobs:
       - run:
           name: build push image
           command: echo "hello world!"
-      
+  build_deploy:
+    docker:
+      - image: circleci/openjdk:8-jdk  
+    steps:
+      - checkout
+      - run:
+          name: build push image
+          command: echo "hello world from build and deploy!"
+
 workflows:
   version: 2
   pr_check_workflow:
     jobs:
-      - pr_check
+    - pr_check
+  build_deploy-workflow:
+    jobs:
+    - build_deploy:
+          filters:
+            branches:
+              only: master   
