@@ -9,10 +9,6 @@ jobs:
           name: build push image
           command: echo "hello world!"
   build_deploy:
-    filters:
-      branches:
-        only:
-          - master 
     docker:
       - image: circleci/openjdk:8-jdk  
     steps:
