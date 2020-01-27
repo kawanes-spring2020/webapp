@@ -31,6 +31,9 @@ workflows:
   pr_check_workflow:
     jobs:
     - pr_check
+  maven_test:
+    jobs:
+    - maven/test
   build_deploy-workflow:
     jobs:
     - build_deploy:
