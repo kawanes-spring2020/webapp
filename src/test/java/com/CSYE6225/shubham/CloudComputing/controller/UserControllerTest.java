@@ -73,6 +73,26 @@ public class UserControllerTest {
 	    }
 	}
 
+	@Test
+	public void testGetUser()  {
+		String token;
+		try {
+			token = TokenAuthenticationService.createToken("newuser@yahoo.in", "lastName!@24");
+			System.out.println(token);
+			mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/v1/user/self")
+					.header("Authorization", "Basic " + token))
+			.andExpect(status().is(200));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+
 	
 	 
 	
