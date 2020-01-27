@@ -56,6 +56,17 @@ public class UserControllerTest {
 	      .andExpect(status().is(200));
 	}
 
+	@Test
+	public void creatUserTest1() throws Exception 
+	{
+		
+	  mvc.perform( MockMvcRequestBuilders
+	      .post("http://localhost:8080/v1/user")
+	      .content(asJsonString(new User("newuser@yahoo.in", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
+	      .contentType(MediaType.APPLICATION_JSON)
+	      .accept(MediaType.APPLICATION_JSON))
+	      .andExpect(status().is(400));
+	}
 	public static String asJsonString(final Object obj) {
 	    try {
 	        return new ObjectMapper().writeValueAsString(obj);

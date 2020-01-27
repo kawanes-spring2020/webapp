@@ -74,10 +74,10 @@ public class UserController {
 	    	System.out.println("email"+user.getEmail().matches(regex));
             return ResponseEntity.badRequest().body(null);
         }    
-		//if(repository.existsByEmail(user.getEmail())) {
-		//	System.out.println("email exist"+repository.existsByEmail(user.getEmail()));
-            //return ResponseEntity.badRequest().body(null);
-       // }
+		if(repository.existsByEmail(user.getEmail())) {
+			System.out.println("email exist"+repository.existsByEmail(user.getEmail()));
+            return ResponseEntity.badRequest().body(null);
+        }
 		String specialChars = "((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{8,40})";
         if (!user.getPassword().matches(specialChars))
         {	
