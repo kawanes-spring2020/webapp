@@ -11,7 +11,6 @@ jobs:
       - checkout
       - run: sudo apt-get update
       - run: sudo apt-get install postgresql-client-9.6
-      - run: whoami
       - run: |
           psql \
           -d $TEST_DATABASE_URL \
@@ -24,12 +23,12 @@ jobs:
           psql \
           -d $TEST_DATABASE_URL \
           -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('4531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham1@gmail.com' , 'Shubham', 'Kawane','\$2a\$10\$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm') RETURNING password;"
-      - run: mvn install -Dmaven.test.skip=true
-      - run: |
-          psql \
-          -d $TEST_DATABASE_URL \
-          -c "SELECT id, account_created,account_updated, email_address, first_name,last_name,password FROM public.users"
-      - run: mvn test
+      - run:
+          name: Build webapp without running tests
+          command: mvn install -Dmaven.test.skip=true
+      - run: 
+          name: Test webapp
+          command: mvn test
       - run: |
           psql \
           -d $TEST_DATABASE_URL \
@@ -53,4 +52,4 @@ workflows:
     - build_deploy:
           filters:
             branches:
-              only: master   
+              only: master
