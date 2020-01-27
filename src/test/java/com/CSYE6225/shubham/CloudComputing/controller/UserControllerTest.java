@@ -42,24 +42,7 @@ public class UserControllerTest {
 	        this.mvc = builder.build();
 	    }
 	 
-	@Test
-	public void testGetUser()  {
-		String token;
-		try {
-			token = TokenAuthenticationService.createToken("gmail@gmail.com", "lasbstAAme!@24");
-			System.out.println(token);
-			mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/v1/user/self")
-					.header("Authorization", "Basic " + token))
-			.andExpect(status().is(200));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+	
 	
 	@Test
 	public void creatUserTest() throws Exception 
@@ -67,12 +50,12 @@ public class UserControllerTest {
 		
 	  mvc.perform( MockMvcRequestBuilders
 	      .post("http://localhost:8080/v1/user")
-	      .content(asJsonString(new User("testtest@gmail.com", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
+	      .content(asJsonString(new User("puneettanwar@gmail.com", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
 	      .andExpect(status().is(200));
 	}
-	 
+
 	public static String asJsonString(final Object obj) {
 	    try {
 	        return new ObjectMapper().writeValueAsString(obj);
@@ -80,25 +63,21 @@ public class UserControllerTest {
 	        throw new RuntimeException(e);
 	    }
 	}
-	
+
 	@Test
-	public void updateUserTest() throws Exception 
+	public void creatUserTest1() throws Exception 
 	{
-		String token;
-		token = TokenAuthenticationService.createToken("gmail@gmail.com", "lasbstAAme!@24");
-		mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/v1/user/self")
-				.header("Authorization", "Basic " + token)
-	      .content(asJsonString1(new User("gmail@gmail.com", "lasbstAAme!@24", "ni761234ce","nice","bhdbsad","dfnsdf")))
+		
+	  mvc.perform( MockMvcRequestBuilders
+	      .post("http://localhost:8080/v1/user")
+	      .content(asJsonString(new User("puneettanwar@gmail.com", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
-	      .andExpect(status().is(204));
+	      .andExpect(status().is(400));
 	}
 	 
-	public static String asJsonString1(final Object obj) {
-	    try {
-	        return new ObjectMapper().writeValueAsString(obj);
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
-	}
+	
+	
+	
 }
+
