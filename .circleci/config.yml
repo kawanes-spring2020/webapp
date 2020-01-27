@@ -6,8 +6,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: build push image
-          command: echo "hello world!"
+          name: compile and run unit test
+          command: mvn package
   build_deploy:
     docker:
       - image: circleci/openjdk:8-jdk  
