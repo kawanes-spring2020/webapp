@@ -53,6 +53,7 @@ public class UserController {
 		_user = repository.findByEmail(username);
 		System.out.println("user is"+_user);
 		if(repository.existsByEmail(username) && encoder.matches(password, _user.getPassword())) {
+			System.out.println("bhetla");
 			UserReturn returnUser = new UserReturn(_user.getId(),_user.getEmail(),_user.getFirst_name(), _user.getLast_name(), _user.getAccount_created(), _user.getAccount_updated());
 			return ResponseEntity.ok().body(returnUser);
 			
