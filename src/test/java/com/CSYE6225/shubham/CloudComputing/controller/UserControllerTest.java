@@ -91,6 +91,27 @@ public class UserControllerTest {
 		}
 
 	}
+
+	@Test
+	public void updateUserTest() throws Exception 
+	{
+		String token;
+		token = TokenAuthenticationService.createToken("shubham1@gmail.com", "Shubham123%");
+		mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/v1/user/self")
+				.header("Authorization", "Basic " + token)
+	      .content(asJsonString1(new User("shubham1@gmail.com", "Shubham123%", "Updated firstname","Updated lastname","bhdbsad","dfnsdf")))
+	      .contentType(MediaType.APPLICATION_JSON)
+	      .accept(MediaType.APPLICATION_JSON))
+	      .andExpect(status().is(204));
+	}
+	 
+	public static String asJsonString1(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}
 	
 
 	
