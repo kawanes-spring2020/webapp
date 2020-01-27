@@ -3,10 +3,20 @@ jobs:
   pr_check:
     docker:
       - image: circleci/openjdk:8-jdk
-      - image: circleci/postgres:9.6.2-alpine
+      - image: circleci/postgres:9.6.5-alpine
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: users
+          POSTGRES_DB: postgres
+          TEST_DATABASE_URL: postgresql://postgres@localhost/postgres
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-9.6
+      - run: whoami
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "CREATE TABLE users(id uuid NOT NULL,account_created character varying(255),account_updated character varying(255),email_address character varying(255),first_name character varying(255),last_name character varying(255),password character varying(255),CONSTRAINT users_pkey PRIMARY KEY (id),CONSTRAINT uk1ar956vx8jufbghpyi09yr16l UNIQUE (email_address));"
     steps:
       - checkout
       - run:
