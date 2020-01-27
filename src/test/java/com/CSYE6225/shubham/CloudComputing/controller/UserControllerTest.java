@@ -46,7 +46,7 @@ public class UserControllerTest {
 	public void testGetUser()  {
 		String token;
 		try {
-			token = TokenAuthenticationService.createToken("puneet1@gmail.com", "Puneet123@#");
+			token = TokenAuthenticationService.createToken("puneettanwar@gmail.com", "lastName!@24");
 			System.out.println(token);
 			mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/v1/user/self")
 					.header("Authorization", "Basic " + token))
@@ -85,10 +85,10 @@ public class UserControllerTest {
 	public void updateUserTest() throws Exception 
 	{
 		String token;
-		token = TokenAuthenticationService.createToken("puneet1@gmail.com", "Puneet123@#");
+		token = TokenAuthenticationService.createToken("puneettanwar@gmail.com", "lastName!@24");
 		mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/v1/user/self")
 				.header("Authorization", "Basic " + token)
-	      .content(asJsonString1(new User("puneet1@gmail.com", "Puneet123@#", "ni761234ce","nice","bhdbsad","dfnsdf")))
+	      .content(asJsonString1(new User("puneettanwar@gmail.com", "lastName!@24", "ni761234ce","nice","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
 	      .andExpect(status().is(204));
