@@ -64,17 +64,7 @@ public class UserControllerTest {
 	    }
 	}
 
-	@Test
-	public void creatUserTest1() throws Exception 
-	{
-		
-	  mvc.perform( MockMvcRequestBuilders
-	      .post("http://localhost:8080/v1/user")
-	      .content(asJsonString(new User("abcdefg@gmail.com", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
-	      .contentType(MediaType.APPLICATION_JSON)
-	      .accept(MediaType.APPLICATION_JSON))
-	      .andExpect(status().is(400));
-	}
+	
 	 
 	
 	
