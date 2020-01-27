@@ -20,7 +20,7 @@ jobs:
           psql \
           -d $TEST_DATABASE_URL \
           -c "SELECT email_address from public.users"
-      - run: mvn package
+      - run: mvn clean install
       - run: mvn test
       - run: |
           psql \
