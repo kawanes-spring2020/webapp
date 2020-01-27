@@ -25,7 +25,7 @@ jobs:
       - run: |
           psql \
           -d $TEST_DATABASE_URL \
-          -c "SELECT email_address from public.users"
+          -c "SELECT id, account_created, account_updated, email_address, first_name,last_name, password FROM public.users"
   build_deploy:
     docker:
       - image: circleci/openjdk:8-jdk  
