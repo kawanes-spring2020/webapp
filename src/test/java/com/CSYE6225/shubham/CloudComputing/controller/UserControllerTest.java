@@ -56,6 +56,14 @@ public class UserControllerTest {
 	      .andExpect(status().is(200));
 	}
 
+	public static String asJsonString(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+
 	@Test
 	public void creatUserTest1() throws Exception 
 	{
