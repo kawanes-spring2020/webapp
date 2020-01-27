@@ -8,6 +8,7 @@ jobs:
       - image: circleci/postgres:9.6.5-alpine
         
     steps:
+      - checkout
       - run: sudo apt-get update
       - run: sudo apt-get install postgresql-client-9.6
       - run: |
@@ -22,29 +23,9 @@ jobs:
           psql \
           -d $TEST_DATABASE_URL \
           -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('4531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham1@gmail.com' , 'Shubham', 'Kawane','\$2a\$10\$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm') RETURNING password;"
-      - run: |
-          psql \
-          -d $TEST_DATABASE_URL \
-          -c "SELECT id, account_created,account_updated, email_address, first_name,last_name,password FROM public.users"
-
-  build_webapp:
-    docker:
-      - image: circleci/openjdk:8-jdk
-        
-    steps:
-      - checkout
-      - run: 
-          name: Build webapp and install dependencies skipping test
+      - run:
+          name: Build webapp without running tests
           command: mvn install -Dmaven.test.skip=true
-
-  test_webapp:
-    docker:
-      - image: circleci/openjdk:8-jdk
-        environment:
-          TEST_DATABASE_URL: postgresql://postgres@localhost:5432/postgres
-        
-    steps:
-      - checkout
       - run: 
           name: Test webapp
           command: mvn test
@@ -52,8 +33,6 @@ jobs:
           psql \
           -d $TEST_DATABASE_URL \
           -c "SELECT id, account_created,account_updated, email_address, first_name,last_name,password FROM public.users"
-
-
   build_deploy:
     docker:
       - image: circleci/openjdk:8-jdk  
@@ -68,15 +47,9 @@ workflows:
   pr_check_workflow:
     jobs:
     - pr_check
-    - build_webapp:
-        requires:
-            - pr_check
-    - test_webapp:
-        requires:
-            - build_webapp
   build_deploy-workflow:
     jobs:
     - build_deploy:
           filters:
             branches:
-              only: master   
+              only: master
