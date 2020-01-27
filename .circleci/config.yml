@@ -19,7 +19,7 @@ jobs:
       - run: |
           psql \
           -d $TEST_DATABASE_URL \
-          -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('3531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham@gmail.com' , 'Shubham', 'Kawane','$2a$10$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm') RETURNING password;"
+          -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('3531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham@gmail.com' , 'Shubham', 'Kawane','\"$2a$10$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm\"') RETURNING password;"
       - run: mvn install -Dmaven.test.skip=true
       - run: |
           psql \
