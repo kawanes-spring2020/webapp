@@ -42,7 +42,24 @@ public class UserControllerTest {
 	        this.mvc = builder.build();
 	    }
 	 
-	
+	@Test
+	public void testGetUser()  {
+		String token;
+		try {
+			token = TokenAuthenticationService.createToken("newuser@yahoo.in", "lastName!@24");
+			System.out.println(token);
+			mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/v1/user/self")
+					.header("Authorization", "Basic " + token))
+			.andExpect(status().is(200));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 	
 	@Test
 	public void creatUserTest() throws Exception 
@@ -53,19 +70,29 @@ public class UserControllerTest {
 	      .content(asJsonString(new User("newuser@yahoo.in", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
+
 	      .andExpect(status().is(200));
 	}
 
 	@Test
-	public void creatUserTest1() throws Exception 
+	public void updateUserTest() throws Exception 
 	{
-		
-	  mvc.perform( MockMvcRequestBuilders
-	      .post("http://localhost:8080/v1/user")
-	      .content(asJsonString(new User("newuser@yahoo.in", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
+		String token;
+		token = TokenAuthenticationService.createToken("newuser@yahoo.in", "lastName!@24");
+		mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/v1/user/self")
+				.header("Authorization", "Basic " + token)
+	      .content(asJsonString1(new User("newuser@yahoo.in", "Puneet123@#", "ni761234ce","nice","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
-	      .andExpect(status().is(400));
+	      .andExpect(status().is(204));
+	}
+	 
+	public static String asJsonString1(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 	public static String asJsonString(final Object obj) {
 	    try {
