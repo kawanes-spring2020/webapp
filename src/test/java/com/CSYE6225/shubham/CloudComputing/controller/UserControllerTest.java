@@ -50,7 +50,7 @@ public class UserControllerTest {
 		
 	  mvc.perform( MockMvcRequestBuilders
 	      .post("http://localhost:8080/v1/user")
-	      .content(asJsonString(new User("abcdefg@gmail.com", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
+	      .content(asJsonString(new User("newuser@yahoo.in", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
 	      .andExpect(status().is(200));
