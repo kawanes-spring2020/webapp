@@ -82,8 +82,14 @@ workflows:
     jobs:
     - pr_check
     - db_setup
+        requires:
+            - pr_check
     - build_webapp
+        requires:
+            - db_setup
     - test_webapp
+        requires:
+            - build_webapp
   build_deploy-workflow:
     jobs:
     - build_deploy:
