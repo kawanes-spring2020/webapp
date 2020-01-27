@@ -49,8 +49,12 @@ public class UserController {
 		    username = values[0];
 		    password = values[1];
 		}
+		System.out.println(username+"    "+password);
 		_user = repository.findByEmail(username);
+		System.out.println(username+"   "+password+"  "+_user.getPassword() );
+		System.out.println("user is"+_user);
 		if(repository.existsByEmail(username) && encoder.matches(password, _user.getPassword())) {
+			System.out.println("bhetla");
 			UserReturn returnUser = new UserReturn(_user.getId(),_user.getEmail(),_user.getFirst_name(), _user.getLast_name(), _user.getAccount_created(), _user.getAccount_updated());
 			return ResponseEntity.ok().body(returnUser);
 			
@@ -74,10 +78,10 @@ public class UserController {
 	    	System.out.println("email"+user.getEmail().matches(regex));
             return ResponseEntity.badRequest().body(null);
         }    
-		//if(repository.existsByEmail(user.getEmail())) {
-		//	System.out.println("email exist"+repository.existsByEmail(user.getEmail()));
-            //return ResponseEntity.badRequest().body(null);
-       // }
+		if(repository.existsByEmail(user.getEmail())) {
+			System.out.println("email exist"+repository.existsByEmail(user.getEmail()));
+            return ResponseEntity.badRequest().body(null);
+        }
 		String specialChars = "((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{8,40})";
         if (!user.getPassword().matches(specialChars))
         {	
