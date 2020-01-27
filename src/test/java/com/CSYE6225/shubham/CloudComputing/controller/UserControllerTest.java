@@ -77,7 +77,7 @@ public class UserControllerTest {
 	public void testGetUser()  {
 		String token;
 		try {
-			token = TokenAuthenticationService.createToken("newuser@yahoo.in", "lastName!@24");
+			token = TokenAuthenticationService.createToken("shubham@gmail.com", "Divya123@#");
 			System.out.println(token);
 			mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/v1/user/self")
 					.header("Authorization", "Basic " + token))
