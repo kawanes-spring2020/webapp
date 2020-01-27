@@ -81,13 +81,13 @@ workflows:
   pr_check_workflow:
     jobs:
     - pr_check
-    - db_setup
+    - db_setup:
         requires:
             - pr_check
-    - build_webapp
+    - build_webapp:
         requires:
             - db_setup
-    - test_webapp
+    - test_webapp:
         requires:
             - build_webapp
   build_deploy-workflow:
