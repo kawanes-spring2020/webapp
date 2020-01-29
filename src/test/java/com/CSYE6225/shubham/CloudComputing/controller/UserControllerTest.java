@@ -42,35 +42,11 @@ public class UserControllerTest {
 	        this.mvc = builder.build();
 	    }
 	 
-	
-	@Test
-	public void creatUserTest() throws Exception 
-	{
-		
-	  mvc.perform( MockMvcRequestBuilders
-	      .post("http://localhost:8080/v1/user")
-	      .content(asJsonString(new User("newuser@yahoo.in", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
-	      .contentType(MediaType.APPLICATION_JSON)
-	      .accept(MediaType.APPLICATION_JSON))
-
-	      .andExpect(status().is(200));
-	}
-
-	
-	
-	public static String asJsonString(final Object obj) {
-	    try {
-	        return new ObjectMapper().writeValueAsString(obj);
-	    } catch (Exception e) {
-	        throw new RuntimeException(e);
-	    }
-	}
-
 	@Test
 	public void testGetUser()  {
 		String token;
 		try {
-			token = TokenAuthenticationService.createToken("shubham@gmail.com", "Shubham123%");
+			token = TokenAuthenticationService.createToken("puneet1@gmail.com", "Puneet123@#");
 			System.out.println(token);
 			mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/v1/user/self")
 					.header("Authorization", "Basic " + token))
@@ -84,15 +60,35 @@ public class UserControllerTest {
 		}
 
 	}
-
+	
+	@Test
+	public void creatUserTest() throws Exception 
+	{
+		
+	  mvc.perform( MockMvcRequestBuilders
+	      .post("http://localhost:8080/v1/user")
+	      .content(asJsonString(new User("puneettanwar@gmail.com", "lastName!@24", "testuser","testing","bhdbsad","dfnsdf")))
+	      .contentType(MediaType.APPLICATION_JSON)
+	      .accept(MediaType.APPLICATION_JSON))
+	      .andExpect(status().is(200));
+	}
+	 
+	public static String asJsonString(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+	
 	@Test
 	public void updateUserTest() throws Exception 
 	{
 		String token;
-		token = TokenAuthenticationService.createToken("shubham1@gmail.com", "Shubham123%");
+		token = TokenAuthenticationService.createToken("puneet1@gmail.com", "Puneet123@#");
 		mvc.perform(MockMvcRequestBuilders.put("http://localhost:8080/v1/user/self")
 				.header("Authorization", "Basic " + token)
-	      .content(asJsonString1(new User("shubham1@gmail.com", "Shubham123%", "Updated firstname","Updated lastname","bhdbsad","dfnsdf")))
+	      .content(asJsonString1(new User("puneet1@gmail.com", "Puneet123@#", "ni761234ce","nice","bhdbsad","dfnsdf")))
 	      .contentType(MediaType.APPLICATION_JSON)
 	      .accept(MediaType.APPLICATION_JSON))
 	      .andExpect(status().is(204));
@@ -105,12 +101,4 @@ public class UserControllerTest {
 	        throw new RuntimeException(e);
 	    }
 	}
-	
-
-	
-	 
-	
-	
-	
 }
-
