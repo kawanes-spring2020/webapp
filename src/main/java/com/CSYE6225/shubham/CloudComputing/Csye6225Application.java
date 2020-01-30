@@ -3,7 +3,7 @@ package com.CSYE6225.shubham.CloudComputing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-
+//code check
 @SpringBootApplication(exclude={SecurityAutoConfiguration.class})
 public class Csye6225Application {
 
