@@ -35,12 +35,33 @@ jobs:
           -c "SELECT id, account_created,account_updated, email_address, first_name,last_name,password FROM public.users"
   build_deploy:
     docker:
-      - image: circleci/openjdk:8-jdk  
+      - image: circleci/openjdk:8-jdk
+        environment:
+          TEST_DATABASE_URL: postgresql://postgres@localhost:5432/postgres
+      - image: circleci/postgres:9.6.5-alpine
+        
     steps:
       - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-9.6
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "CREATE TABLE public.users(id uuid NOT NULL,account_created character varying(255),account_updated character varying(255),email_address character varying(255),first_name character varying(255),last_name character varying(255),password text,CONSTRAINT users_pkey PRIMARY KEY (id));"
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('3531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham@gmail.com' , 'Shubham', 'Kawane','\$2a\$10\$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm') RETURNING password;"
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('4531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham1@gmail.com' , 'Shubham', 'Kawane','\$2a\$10\$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm') RETURNING password;"
       - run:
-          name: build push image
-          command: echo "hello world from build and deploy!"
+          name: Build webapp without running tests
+          command: mvn install -Dmaven.test.skip=true
+      - run: 
+          name: Test webapp
+          command: mvn test
 
 workflows:
   version: 2
