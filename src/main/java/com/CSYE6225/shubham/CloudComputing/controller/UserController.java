@@ -49,7 +49,7 @@ public class UserController {
 	@GetMapping("/user/self")
 	public ResponseEntity<UserReturn> getUser(@RequestHeader HttpHeaders headers) {
 		try {
-			String username = "";
+			String username = "";//username commnet
 			String password = "";
 			User _user = null;
 			final String authorization = headers.getFirst(HttpHeaders.AUTHORIZATION);
