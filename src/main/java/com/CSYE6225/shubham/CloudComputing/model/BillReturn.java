@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.json.JSONObject;
 
 public class BillReturn {
 
@@ -25,9 +26,10 @@ public class BillReturn {
 	private Double amount_due;
 	private PaymentStatus payment_status;
 	private String[] categories;
+	private File attachment;
 
 	public BillReturn(UUID id,String created_ts, String updated_ts, UUID owner_id, String vendor, String bill_date, String due_date,
-			Double amount_due, PaymentStatus payment_status, String[] categories) {
+			Double amount_due, PaymentStatus payment_status, String[] categories, File attachment) {
 //		super();
 		this.id = id;
 		this.created_ts = created_ts;
@@ -39,9 +41,19 @@ public class BillReturn {
 		this.amount_due = amount_due;
 		this.payment_status = payment_status;
 		this.categories = categories;
+		this.attachment = attachment;
 	}
 	
 	public BillReturn() {}
+
+	
+	public File getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(File attachment) {
+		this.attachment = attachment;
+	}
 
 	public String getCreated_ts() {
 		return created_ts;

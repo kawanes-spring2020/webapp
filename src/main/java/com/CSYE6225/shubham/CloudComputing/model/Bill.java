@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @Entity
 @Table(name = "Bills")
@@ -54,8 +57,11 @@ public class Bill {
 	@Column(name = "categories")
 	private String[] categories;
 
+	@Column(name = "attachment")
+	private String attachment;
+
 	public Bill(String created_ts, String updated_ts, UUID owner_id, String vendor, String bill_date, String due_date,
-			Double amount_due, PaymentStatus payment_status, String[] categories) {
+			Double amount_due, PaymentStatus payment_status, String[] categories, String attachment) {
 //		super();
 		this.created_ts = LocalDateTime.now().toString();
 		this.updated_ts = LocalDateTime.now().toString();
@@ -66,9 +72,19 @@ public class Bill {
 		this.amount_due = amount_due;
 		this.payment_status = payment_status;
 		this.categories = categories;
+		this.attachment = attachment;
 	}
 	
 	public Bill() {}
+	
+	
+	public String getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
+	}
 
 	public String getCreated_ts() {
 		return created_ts;
