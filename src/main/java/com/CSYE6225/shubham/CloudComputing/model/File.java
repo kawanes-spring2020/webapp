@@ -37,18 +37,48 @@ public class File {
 	@Column(name = "url")
 	private String url;
 	
+	@Column(name = "md5")
+	private String md5;
 	
+	@Column(name = "size")
+	private int size;
 	
-	public File(String upload_date, String file_name, String url) {
+	public File(String upload_date, String file_name, String url, String md5, int size) {
 		this.upload_date = LocalDate.now().toString();
 		this.file_name = file_name;
 		this.url = url;
+		this.md5 = md5;
+		this.size = size;
 		
 	}
 
 
 
 	public File() {}
+
+	
+
+	public String getMd5() {
+		return md5;
+	}
+
+
+
+	public void setMd5(String md5) {
+		this.md5 = md5;
+	}
+
+
+
+	public int getSize() {
+		return size;
+	}
+
+
+
+	public void setSize(int size) {
+		this.size = size;
+	}
 
 
 

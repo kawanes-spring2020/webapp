@@ -1,5 +1,6 @@
 package com.CSYE6225.shubham.CloudComputing.controller;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -438,26 +440,54 @@ public class UserController {
 						if (billvar.getId().equals(availableBill.getId())) {
 							flag = true;
 							if (file.isEmpty()) {
-								return ResponseEntity.status(401).build();
+								return ResponseEntity.status(400).build();
 							}
-
+							File fil = gson.fromJson(billvar.getAttachment(), File.class);
+							if(fil.getId()!=null) {
+								return ResponseEntity.status(400).build();
+							}
 							Gson gson = new Gson();
 							byte[] bytes = file.getBytes();
 							Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-							Files.write(path, bytes);
+							java.io.File f = new java.io.File(path.toString());
+							Boolean exist = f.exists();
+							int length = (int) f.length();
 							JSONObject attachment = new JSONObject();
-							File filevar = filerepository
-									.save(new File("", file.getOriginalFilename(), path.toString()));
-							attachment.put("file_name", file.getOriginalFilename());
-							attachment.put("id", filevar.getId());
-							attachment.put("url", path.toString());
-							attachment.put("upload_date", filevar.getUpload_date());
-							FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
-									filevar.getFile_name(), filevar.getUrl());
-							String jsonInString = gson.toJson(filevar, File.class);
-							availableBill.setAttachment(jsonInString);
-							billrepository.save(availableBill);
-							return ResponseEntity.status(201).body(filereturn);
+							if(!exist) {
+								Files.write(path, bytes);
+								String checksum = DigestUtils.md5DigestAsHex(new FileInputStream(path.toString()));
+								File filevar = filerepository
+										.save(new File("", file.getOriginalFilename(), path.toString(),checksum,length));
+								attachment.put("file_name", file.getOriginalFilename());
+								attachment.put("id", filevar.getId());
+								attachment.put("url", path.toString());
+								attachment.put("upload_date", filevar.getUpload_date());
+								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
+										filevar.getFile_name(), filevar.getUrl(), filevar.getMd5(), filevar.getSize());
+								String jsonInString = gson.toJson(filevar, File.class);
+								availableBill.setAttachment(jsonInString);
+								billrepository.save(availableBill);
+								return ResponseEntity.status(201).body(filereturn);
+							}
+							else {
+								Path path1 = Paths.get(UPLOADED_FOLDER+billvar.getVendor()+ file.getOriginalFilename());
+								Files.write(path1, bytes);
+								String checksum = DigestUtils.md5DigestAsHex(new FileInputStream(path1.toString()));
+								File filevar = filerepository
+										.save(new File("", file.getOriginalFilename(), path1.toString(),checksum,length));
+								attachment.put("file_name", file.getOriginalFilename());
+								attachment.put("id", filevar.getId());
+								attachment.put("url", path1.toString());
+								attachment.put("upload_date", filevar.getUpload_date());
+								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
+										filevar.getFile_name(), filevar.getUrl(),filevar.getMd5(), filevar.getSize());
+								String jsonInString = gson.toJson(filevar, File.class);
+								availableBill.setAttachment(jsonInString);
+								billrepository.save(availableBill);
+								return ResponseEntity.status(201).body(filereturn);
+							}
+							
+							
 
 						}
 					}
@@ -512,7 +542,7 @@ public class UserController {
 							File filevar = gson.fromJson(billvar.getAttachment(), File.class);
 							if (fileid.equals(filevar.getId())) {
 								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
-										filevar.getFile_name(), filevar.getUrl());
+										filevar.getFile_name(), filevar.getUrl(), filevar.getMd5(), filevar.getSize());
 
 								return ResponseEntity.status(200).body(filereturn);
 
@@ -576,6 +606,8 @@ public class UserController {
 								filerepository.delete(filevar);
 								billvar.setAttachment("{}");
 								billrepository.save(billvar);
+								java.io.File fileio = new java.io.File(filevar.getUrl());
+								fileio.delete();
 								return ResponseEntity.status(204).body(null);
 
 							}
