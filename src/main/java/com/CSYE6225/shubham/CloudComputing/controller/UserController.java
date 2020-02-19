@@ -389,6 +389,10 @@ public class UserController {
 						if (billvar.getId().equals(availableBill.getId())) {
 							flag = true;
 							billrepository.delete(availableBill);
+							File filevar = gson.fromJson(billvar.getAttachment(), File.class);
+							filerepository.delete(filevar);
+							java.io.File fileio = new java.io.File(filevar.getUrl());
+							fileio.delete();
 							return ResponseEntity.status(204).build();
 						}
 					}
