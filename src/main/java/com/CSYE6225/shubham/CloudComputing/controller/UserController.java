@@ -200,7 +200,7 @@ public class UserController {
 				BillReturn billreturn = new BillReturn(billvar.getId(), billvar.getCreated_ts(),
 						billvar.getUpdated_ts(), owner_id, bill.getVendor(), bill.getBill_date(), bill.getDue_date(),
 						bill.getAmount_due(), bill.getPayment_status(), bill.getCategories(),
-						gson.fromJson(billvar.getAttachment(), File.class));
+						gson.fromJson(billvar.getAttachment(), FileReturn.class));
 				return ResponseEntity.status(201).body(billreturn);
 			}
 		} catch (Exception e) {
@@ -240,7 +240,7 @@ public class UserController {
 					BillReturn billreturn = new BillReturn(billvar.getId(), billvar.getCreated_ts(),
 							billvar.getUpdated_ts(), owner_id, billvar.getVendor(), billvar.getBill_date(),
 							billvar.getDue_date(), billvar.getAmount_due(), billvar.getPayment_status(),
-							billvar.getCategories(), gson.fromJson(billvar.getAttachment(), File.class));
+							billvar.getCategories(), gson.fromJson(billvar.getAttachment(), FileReturn.class));
 
 					returnList.add(billreturn);
 				}
@@ -288,7 +288,7 @@ public class UserController {
 						BillReturn billreturn = new BillReturn(billvar.getId(), billvar.getCreated_ts(),
 								billvar.getUpdated_ts(), owner_id, billvar.getVendor(), billvar.getBill_date(),
 								billvar.getDue_date(), billvar.getAmount_due(), billvar.getPayment_status(),
-								billvar.getCategories(), gson.fromJson(billvar.getAttachment(), File.class));
+								billvar.getCategories(), gson.fromJson(billvar.getAttachment(), FileReturn.class));
 						returnList.add(billreturn);
 					}
 				}
@@ -342,7 +342,7 @@ public class UserController {
 						BillReturn billreturn = new BillReturn(newBill.getId(), newBill.getCreated_ts(),
 								newBill.getUpdated_ts(), owner_id, newBill.getVendor(), newBill.getBill_date(),
 								newBill.getDue_date(), newBill.getAmount_due(), newBill.getPayment_status(),
-								newBill.getCategories(), gson.fromJson(billvar.getAttachment(), File.class));
+								newBill.getCategories(), gson.fromJson(billvar.getAttachment(), FileReturn.class));
 						return ResponseEntity.ok().body(billreturn);
 					}
 				}
@@ -467,7 +467,7 @@ public class UserController {
 								attachment.put("url", path.toString());
 								attachment.put("upload_date", filevar.getUpload_date());
 								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
-										filevar.getFile_name(), filevar.getUrl(), filevar.getMd5(), filevar.getSize());
+										filevar.getFile_name(), filevar.getUrl());
 								String jsonInString = gson.toJson(filevar, File.class);
 								availableBill.setAttachment(jsonInString);
 								billrepository.save(availableBill);
@@ -484,7 +484,7 @@ public class UserController {
 								attachment.put("url", path1.toString());
 								attachment.put("upload_date", filevar.getUpload_date());
 								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
-										filevar.getFile_name(), filevar.getUrl(),filevar.getMd5(), filevar.getSize());
+										filevar.getFile_name(), filevar.getUrl());
 								String jsonInString = gson.toJson(filevar, File.class);
 								availableBill.setAttachment(jsonInString);
 								billrepository.save(availableBill);
@@ -546,7 +546,7 @@ public class UserController {
 							File filevar = gson.fromJson(billvar.getAttachment(), File.class);
 							if (fileid.equals(filevar.getId())) {
 								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
-										filevar.getFile_name(), filevar.getUrl(), filevar.getMd5(), filevar.getSize());
+										filevar.getFile_name(), filevar.getUrl());
 
 								return ResponseEntity.status(200).body(filereturn);
 
