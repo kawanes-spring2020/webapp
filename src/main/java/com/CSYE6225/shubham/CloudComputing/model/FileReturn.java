@@ -10,18 +10,14 @@ public class FileReturn {
 	private String upload_date;
 	private String file_name;
 	private String url;
-	private String md5;
-	private int size;
 	
 	
 	
-	public FileReturn(UUID id, String upload_date, String file_name, String url, String md5, int size) {
+	public FileReturn(UUID id, String upload_date, String file_name, String url) {
 		this.id = id;
 		this.upload_date = upload_date;
 		this.file_name = file_name;
 		this.url = url;
-		this.md5 = md5;
-		this.size = size;
 	}
 
 
@@ -30,27 +26,7 @@ public class FileReturn {
 
 	
 
-	public String getMd5() {
-		return md5;
-	}
-
-
-
-	public void setMd5(String md5) {
-		this.md5 = md5;
-	}
-
-
-
-	public int getSize() {
-		return size;
-	}
-
-
-
-	public void setSize(int size) {
-		this.size = size;
-	}
+	
 
 
 

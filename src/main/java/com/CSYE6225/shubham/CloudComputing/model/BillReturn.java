@@ -26,10 +26,10 @@ public class BillReturn {
 	private Double amount_due;
 	private PaymentStatus payment_status;
 	private String[] categories;
-	private File attachment;
+	private FileReturn attachment;
 
 	public BillReturn(UUID id,String created_ts, String updated_ts, UUID owner_id, String vendor, String bill_date, String due_date,
-			Double amount_due, PaymentStatus payment_status, String[] categories, File attachment) {
+			Double amount_due, PaymentStatus payment_status, String[] categories, FileReturn attachment) {
 //		super();
 		this.id = id;
 		this.created_ts = created_ts;
@@ -47,11 +47,11 @@ public class BillReturn {
 	public BillReturn() {}
 
 	
-	public File getAttachment() {
+	public FileReturn getAttachment() {
 		return attachment;
 	}
 
-	public void setAttachment(File attachment) {
+	public void setAttachment(FileReturn attachment) {
 		this.attachment = attachment;
 	}
 
