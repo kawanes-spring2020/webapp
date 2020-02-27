@@ -21,11 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Bill {
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(
-		name = "UUID",
-		strategy = "org.hibernate.id.UUIDGenerator"
-	)
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
@@ -57,7 +54,7 @@ public class Bill {
 	@Column(name = "categories")
 	private String[] categories;
 
-	@Column(name = "attachment")
+	@Column(name = "attachment",length=10485760)
 	private String attachment;
 
 	public Bill(String created_ts, String updated_ts, UUID owner_id, String vendor, String bill_date, String due_date,
