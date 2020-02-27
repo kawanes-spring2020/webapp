@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,14 +46,23 @@ import com.CSYE6225.shubham.CloudComputing.model.UserReturn;
 import com.CSYE6225.shubham.CloudComputing.repository.BillRepository;
 import com.CSYE6225.shubham.CloudComputing.repository.FileRepository;
 import com.CSYE6225.shubham.CloudComputing.repository.UserRepository;
+import com.CSYE6225.shubham.CloudComputing.service.AmazonClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 @RestController
 @RequestMapping("/v1")
 public class UserController {
-	private static String UPLOADED_FOLDER = "/home/shubham/CSYE6225/webapp/target/assets/";
+	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/target/assets/";
 	private Gson gson = new Gson();
+
+	private AmazonClient amazonClient;
+
+    @Autowired
+    UserController(AmazonClient amazonClient) {
+        this.amazonClient = amazonClient;
+    }
+
 	@Autowired
 	UserRepository repository;
 
@@ -64,6 +74,8 @@ public class UserController {
 
 	@Autowired
 	PasswordEncoder encoder;
+	
+	
 
 	@GetMapping("/user/self")
 	public ResponseEntity<UserReturn> getUser(@RequestHeader HttpHeaders headers) {
@@ -390,6 +402,7 @@ public class UserController {
 							flag = true;
 							billrepository.delete(availableBill);
 							File filevar = gson.fromJson(billvar.getAttachment(), File.class);
+							this.amazonClient.deleteFileFromS3Bucket(filevar.getUrl());
 							filerepository.delete(filevar);
 							java.io.File fileio = new java.io.File(filevar.getUrl());
 							fileio.delete();
@@ -459,9 +472,10 @@ public class UserController {
 							JSONObject attachment = new JSONObject();
 							if(!exist) {
 								Files.write(path, bytes);
+								String url = this.amazonClient.uploadFile(file);
 								String checksum = DigestUtils.md5DigestAsHex(new FileInputStream(path.toString()));
 								File filevar = filerepository
-										.save(new File("", file.getOriginalFilename(), path.toString(),checksum,length));
+										.save(new File("", file.getOriginalFilename(), url,checksum,length));
 								attachment.put("file_name", file.getOriginalFilename());
 								attachment.put("id", filevar.getId());
 								attachment.put("url", path.toString());
@@ -475,10 +489,11 @@ public class UserController {
 							}
 							else {
 								Path path1 = Paths.get(UPLOADED_FOLDER+billvar.getVendor()+ file.getOriginalFilename());
+								String url = this.amazonClient.uploadFile(file);
 								Files.write(path1, bytes);
 								String checksum = DigestUtils.md5DigestAsHex(new FileInputStream(path1.toString()));
 								File filevar = filerepository
-										.save(new File("", file.getOriginalFilename(), path1.toString(),checksum,length));
+										.save(new File("", file.getOriginalFilename(), url,checksum,length));
 								attachment.put("file_name", file.getOriginalFilename());
 								attachment.put("id", filevar.getId());
 								attachment.put("url", path1.toString());
@@ -607,6 +622,7 @@ public class UserController {
 
 							File filevar = gson.fromJson(billvar.getAttachment(), File.class);
 							if (fileid.equals(filevar.getId())) {
+								this.amazonClient.deleteFileFromS3Bucket(filevar.getUrl());
 								filerepository.delete(filevar);
 								billvar.setAttachment("{}");
 								billrepository.save(billvar);
