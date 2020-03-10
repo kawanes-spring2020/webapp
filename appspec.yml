@@ -5,6 +5,5 @@ files:
     destination: /home/ubuntu/webapp
 hooks:
   ApplicationStart:
-    - location: ./runapp.sh
+    - location: ./runapp.sh > /dev/null 2> /dev/null < /dev/null &
       runas: ubuntu
-      timeout: 30
