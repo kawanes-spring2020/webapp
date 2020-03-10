@@ -18,7 +18,7 @@ public class Csye6225Application {
 			Scanner sc = new Scanner(input);
 			Scanner sc1 = new Scanner(input1);
 			PrintWriter writer = new PrintWriter("/home/ubuntu/webapp/src/main/resources/application.properties", "UTF-8");
-			PrintWriter writer1 = new PrintWriter("/home/ubuntu/webapp/target/classes/application.properties", "UTF-8");
+			PrintWriter writer1 = new PrintWriter("/home/ubuntu/webapp/target/application.properties", "UTF-8");
 
 			while(sc.hasNextLine()) {
 			    String s = sc.nextLine();
