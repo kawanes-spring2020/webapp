@@ -5,6 +5,5 @@ cd '/home/ubuntu/webapp'
 sudo mvn clean package
 cd '/home/ubuntu/webapp/target'
 sudo mkdir assets
-sudo kill -9 $(sudo lsof -t -i:8080)
 sudo java -jar CloudComputing-0.0.1-SNAPSHOT.jar
 
