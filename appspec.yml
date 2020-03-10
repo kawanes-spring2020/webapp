@@ -7,3 +7,4 @@ hooks:
   ApplicationStart:
     - location: ./runapp.sh
       runas: ubuntu
+      timeout: 30
