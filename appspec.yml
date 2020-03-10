@@ -6,5 +6,4 @@ files:
 hooks:
   ApplicationStart:
     - location: ./runapp.sh
-      timeout: 60
       runas: ubuntu
