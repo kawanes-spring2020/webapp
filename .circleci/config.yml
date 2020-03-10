@@ -64,7 +64,11 @@ workflows:
   version: 2
   pr_check_workflow:
     jobs:
-    - pr_check
+    - pr_check:
+        filters:
+            branches:
+              only:
+                - master  
     - integration-test-1:
         requires:
           - pr_check
