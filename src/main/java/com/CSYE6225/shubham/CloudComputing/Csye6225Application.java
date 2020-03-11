@@ -9,7 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 //code check
 @SpringBootApplication(exclude={SecurityAutoConfiguration.class})
-public class Csye6225Application {
+public class Csye6225Application  {
+	
 
 	public static void main(String[] args) {
 		try {
