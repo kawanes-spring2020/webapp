@@ -5,6 +5,5 @@ cd '/home/ubuntu/webapp'
 sudo mvn clean package
 cd '/home/ubuntu/webapp/target'
 sudo mkdir assets
-cd '/home/ubuntu/webapp'
-sudo mvn spring-boot:run > /dev/null
+nohup java -jar CloudComputing-0.0.1-SNAPSHOT.jar &
 
