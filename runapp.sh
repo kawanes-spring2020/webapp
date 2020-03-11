@@ -5,5 +5,5 @@ cd '/home/ubuntu/webapp'
 sudo mvn clean package
 cd '/home/ubuntu/webapp/target'
 sudo mkdir assets
-nohup java -jar CloudComputing-0.0.1-SNAPSHOT.jar &
+sudo nohup java -jar CloudComputing-0.0.1-SNAPSHOT.jar &
 
