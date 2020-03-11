@@ -45,20 +45,13 @@ jobs:
     docker:
       - image: cimg/python:3.8
     steps:
-      - checkout
-      - awscli/setup:
-          aws-access-key-id: aws_access_key
-          aws-secret-access-key: aws_secret_key
-          aws-region: aws_region
-      - aws-code-deploy/push-bundle:
+      - aws-code-deploy/deploy:
           application-name: BillApplication
           bundle-bucket: codedeploy.shubhamkawane.me
           bundle-key: code_deploy_sample
-      - aws-code-deploy/deploy-bundle:
-          application-name: BillApplication
           deployment-group: BillApplicationDeploymentGroup
-          bundle-bucket: codedeploy.shubhamkawane.me
-          bundle-key: code_deploy_sample
+          service-role-arn: CodeDeployServiceRole
+      
 
 workflows:
   version: 2
