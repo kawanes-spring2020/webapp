@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  aws-code-deploy: circleci/aws-code-deploy@dev:alpha
+  aws-code-deploy: circleci/aws-code-deploy@1.0.0
   awscli: circleci/aws-cli@0.1.22
   orb-tools: circleci/orb-tools@9.0
 jobs:
