@@ -46,6 +46,10 @@ jobs:
       - image: cimg/python:3.8
     steps:
       - checkout
+      - awscli/setup:
+          aws-access-key-id: aws_access_key
+          aws-secret-access-key: aws_secret_key
+          aws-region: aws_region
       - aws-code-deploy/push-bundle:
           application-name: BillApplication
           bundle-bucket: codedeploy.shubhamkawane.me
