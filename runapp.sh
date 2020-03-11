@@ -5,6 +5,5 @@ cd '/home/ubuntu/webapp'
 sudo mvn clean package
 cd '/home/ubuntu/webapp/target'
 sudo mkdir assets
-sudo ln -s CloudComputing-0.0.1-SNAPSHOT.jar /etc/init.d/codedeploy-agent
-sudo service codedeploy-agent start
+sudo java -jar CloudComputing-0.0.1-SNAPSHOT.jar > /dev/null
 
