@@ -51,7 +51,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 @RestController
-@RequestMapping("/v2")
+@RequestMapping("/v1")
 public class UserController {
 	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/assets/";
 	private Gson gson = new Gson();
