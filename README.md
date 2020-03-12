@@ -12,7 +12,7 @@ Building the project:
 
 Running the unittests:
 
-run mvn test : to run the unit test cases dkmffssfsf
+run mvn test : to run the unit test cases dkmffssfsf fdjfn
 
 
 
