@@ -457,11 +457,11 @@ public class UserController {
 						if (billvar.getId().equals(availableBill.getId())) {
 							flag = true;
 							if (file.isEmpty()) {
-								return ResponseEntity.status(400).build();
+								return ResponseEntity.status(200).build();
 							}
 							File fil = gson.fromJson(billvar.getAttachment(), File.class);
 							if(fil.getId()!=null) {
-								return ResponseEntity.status(400).build();
+								return ResponseEntity.status(201).build();
 							}
 							Gson gson = new Gson();
 							byte[] bytes = file.getBytes();
