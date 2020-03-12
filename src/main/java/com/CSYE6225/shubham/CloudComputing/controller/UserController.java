@@ -53,7 +53,7 @@ import com.google.gson.JsonParser;
 @RestController
 @RequestMapping("/v2")
 public class UserController {
-	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/target/assets/";
+	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/assets/";
 	private Gson gson = new Gson();
 
 	private AmazonClient amazonClient;
