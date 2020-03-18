@@ -57,7 +57,7 @@ import org.apache.commons.lang3.time.StopWatch;
 @RestController
 @RequestMapping("/v2")
 public class UserController {
-	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/target/assets/";
+	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/assets/";
 	private Gson gson = new Gson();
 	private static final Logger LOGGER=LoggerFactory.getLogger(UserController.class);
 
