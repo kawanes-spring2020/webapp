@@ -198,7 +198,7 @@ public class UserController {
 	@PostMapping(value = "/bill/")
 	public ResponseEntity<BillReturn> createBill(@RequestBody Bill bill, @RequestHeader HttpHeaders headers) {
 		try {
-			LOGGER.info("Logging in create bill method method");
+			LOGGER.info("Logging in create bill method method test");
 			statsDclient.incrementCounter("createbill");
 			String username = "";
 			String password = "";
