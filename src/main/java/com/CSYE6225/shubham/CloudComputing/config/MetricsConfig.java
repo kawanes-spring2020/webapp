@@ -16,7 +16,7 @@ public class MetricsConfig {
     public StatsDClient statsDClient(
             @Value("${metrics.statsd.host:localhost}") String host,
             @Value("${metrics.statsd.port:8125}") int port,
-            @Value("${metrics.prefix:webapp}") String prefix
+            @Value("${metrics.prefix:webapp}") String prefix // timepass
     ) {
         return new NonBlockingStatsDClient(prefix, host, port);
     }
