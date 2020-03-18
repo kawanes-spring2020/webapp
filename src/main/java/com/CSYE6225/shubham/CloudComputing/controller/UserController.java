@@ -174,6 +174,9 @@ public class UserController {
 
 	@PutMapping(value = "/user/self")
 	public ResponseEntity<String> updateUser(@RequestBody User user, @RequestHeader HttpHeaders headers) {
+		LOGGER.info("Logging in update user method test");
+		statsDclient.incrementCounter("UpdateUser");
+		StopWatch stopwatch = StopWatch.createStarted();
 		String username = "";
 		String password = "";
 		User _user = null;
@@ -203,7 +206,9 @@ public class UserController {
 				_user.setFirst_name(user.getFirst_name());
 				_user.setLast_name(user.getLast_name());
 				_user.setAccount_updated(LocalDateTime.now().toString());
-
+				
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("Update User Method execute time", stopwatch.getTime());
 				repository.save(_user);
 
 				return ResponseEntity.noContent().build();
@@ -313,6 +318,9 @@ public class UserController {
 	@GetMapping(value = "/bill/{id}")
 	public ResponseEntity<List<BillReturn>> getBill(@PathVariable(value = "id") UUID id,
 			@RequestHeader HttpHeaders headers) throws JSONException {
+		LOGGER.info("Logging in get single bill method method test");
+		statsDclient.incrementCounter("GetSIngleBill");
+		StopWatch stopwatch = StopWatch.createStarted();
 		Gson gson = new Gson();
 		String username = "";
 		String password = "";
@@ -344,6 +352,8 @@ public class UserController {
 								billvar.getUpdated_ts(), owner_id, billvar.getVendor(), billvar.getBill_date(),
 								billvar.getDue_date(), billvar.getAmount_due(), billvar.getPayment_status(),
 								billvar.getCategories(), gson.fromJson(billvar.getAttachment(), FileReturn.class));
+						stopwatch.stop();
+						statsDclient.recordExecutionTime("Get Bill By ID Method execute time", stopwatch.getTime());
 						returnList.add(billreturn);
 					}
 				}
@@ -360,6 +370,9 @@ public class UserController {
 	@PutMapping(value = "/bill/{id}")
 	public ResponseEntity<BillReturn> updateBill(@PathVariable(value = "id") UUID id, @RequestBody Bill bill,
 			@RequestHeader HttpHeaders headers) throws JSONException {
+		LOGGER.info("Logging in update bill method test");
+		statsDclient.incrementCounter("UpdateBill");
+		StopWatch stopwatch = StopWatch.createStarted();
 		String username = "";
 		String password = "";
 		UUID owner_id = null;
@@ -398,6 +411,8 @@ public class UserController {
 								newBill.getUpdated_ts(), owner_id, newBill.getVendor(), newBill.getBill_date(),
 								newBill.getDue_date(), newBill.getAmount_due(), newBill.getPayment_status(),
 								newBill.getCategories(), gson.fromJson(billvar.getAttachment(), FileReturn.class));
+						stopwatch.stop();
+						statsDclient.recordExecutionTime("Update Bill Method execute time", stopwatch.getTime());
 						return ResponseEntity.ok().body(billreturn);
 					}
 				}
@@ -478,7 +493,7 @@ public class UserController {
 			@PathVariable(value = "id") UUID id, @RequestHeader HttpHeaders headers) {
 
 		try {
-			LOGGER.info("Logging in create bill attachment method method test");
+			LOGGER.info("Logging in create bill attachment method test");
 			statsDclient.incrementCounter("createBillAttachment");
 			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
@@ -586,6 +601,9 @@ public class UserController {
 			@PathVariable(value = "fileid") UUID fileid, @RequestHeader HttpHeaders headers) {
 
 		try {
+			LOGGER.info("Logging in Get bill attachment method test");
+			statsDclient.incrementCounter("GetBillAttachment");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -617,7 +635,8 @@ public class UserController {
 							if (fileid.equals(filevar.getId())) {
 								FileReturn filereturn = new FileReturn(filevar.getId(), filevar.getUpload_date(),
 										filevar.getFile_name(), filevar.getUrl());
-
+								stopwatch.stop();
+								statsDclient.recordExecutionTime("Get Bill attachment Method execute time", stopwatch.getTime());
 								return ResponseEntity.status(200).body(filereturn);
 
 							}
@@ -648,6 +667,9 @@ public class UserController {
 			@PathVariable(value = "fileid") UUID fileid, @RequestHeader HttpHeaders headers) {
 
 		try {
+			LOGGER.info("Logging in delete bill attachment method test");
+			statsDclient.incrementCounter("DeleteBillAttachment");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -683,6 +705,8 @@ public class UserController {
 								billrepository.save(billvar);
 								java.io.File fileio = new java.io.File(filevar.getUrl());
 								fileio.delete();
+								stopwatch.stop();
+								statsDclient.recordExecutionTime("Delete Bill attachment Method execute time", stopwatch.getTime());
 								return ResponseEntity.status(204).body(null);
 
 							}
