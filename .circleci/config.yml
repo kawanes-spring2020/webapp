@@ -52,12 +52,12 @@ jobs:
           aws-region: aws_region
       - aws-code-deploy/push-bundle:
           application-name: BillApplication
-          bundle-bucket: codedeploy.shubhamkawane.me
+          bundle-bucket: codedeploy1.shubhamkawane.me
           bundle-key: code_deploy_sample
       - aws-code-deploy/deploy-bundle:
           application-name: BillApplication
           deployment-group: BillApplicationDeploymentGroup
-          bundle-bucket: codedeploy.shubhamkawane.me
+          bundle-bucket: codedeploy1.shubhamkawane.me
           bundle-key: code_deploy_sample
 
 workflows:
