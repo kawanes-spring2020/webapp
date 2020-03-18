@@ -52,6 +52,7 @@ import com.google.gson.JsonParser;
 import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.time.StopWatch;
 
 @RestController
 @RequestMapping("/v2")
@@ -85,8 +86,10 @@ public class UserController {
 	public void testUser() {
 		try {
 			LOGGER.info("Logging in test user method");
+			StopWatch stopwatch = StopWatch.createStarted();
+	        stopwatch.stop();
+			statsDclient.recordExecutionTime("Test Method execute time", stopwatch.getTime());
 			statsDclient.incrementCounter("testUser");
-			statsDclient.recordExecutionTime("execute time", 25);
 			System.out.println("Test Endpoint");
 			
 		} catch (Exception e) {
@@ -100,6 +103,8 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in get user method");
 			statsDclient.incrementCounter("getuser");
+			StopWatch stopwatch = StopWatch.createStarted();
+	        
 			String username = "";// username commnet
 			String password = "";
 			User _user = null;
@@ -119,11 +124,16 @@ public class UserController {
 
 				UserReturn returnUser = new UserReturn(_user.getId(), _user.getEmail(), _user.getFirst_name(),
 						_user.getLast_name(), _user.getAccount_created(), _user.getAccount_updated());
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("GetUser Method execute time", stopwatch.getTime());
 				return ResponseEntity.ok().body(returnUser);
 
 			} else {
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("GetUser Method execute time", stopwatch.getTime());
 				return ResponseEntity.status(401).build();
 			}
+			
 
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(null);
@@ -133,9 +143,10 @@ public class UserController {
 
 	@PostMapping(value = "/user")
 	public ResponseEntity<UserReturn> postUser(@RequestBody User user) {
-		System.out.println("inside" + user);
 		LOGGER.info("Logging in post user method");
 		statsDclient.incrementCounter("postuser");
+		StopWatch stopwatch = StopWatch.createStarted();
+        
 		String regex = "^(.+)@(.+)$";
 
 		Pattern pattern = Pattern.compile(regex);
@@ -158,6 +169,8 @@ public class UserController {
 		UserReturn returnUser = new UserReturn(_user.getId(), _user.getEmail(), _user.getFirst_name(),
 				_user.getLast_name(), _user.getAccount_created(), _user.getAccount_updated());
 		System.out.println("reached" + returnUser);
+		stopwatch.stop();
+		statsDclient.recordExecutionTime("Post User Method execute time", stopwatch.getTime());
 		return ResponseEntity.ok().body(returnUser);
 	}
 
@@ -212,6 +225,7 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in create bill method method test");
 			statsDclient.incrementCounter("createbill");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -237,19 +251,24 @@ public class UserController {
 						billvar.getUpdated_ts(), owner_id, bill.getVendor(), bill.getBill_date(), bill.getDue_date(),
 						bill.getAmount_due(), bill.getPayment_status(), bill.getCategories(),
 						gson.fromJson(billvar.getAttachment(), FileReturn.class));
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("Create Bill Method execute time", stopwatch.getTime());
 				return ResponseEntity.status(201).body(billreturn);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			
 			return ResponseEntity.badRequest().body(null);
 		}
-
+		
 		return ResponseEntity.badRequest().body(null);
 	}
 
 	@GetMapping(value = "/bills")
 	public ResponseEntity<List<BillReturn>> getAllBills(@RequestHeader HttpHeaders headers) {
 		try {
+			LOGGER.info("Logging in get bills method method test");
+			statsDclient.incrementCounter("getAllBills");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -280,6 +299,8 @@ public class UserController {
 
 					returnList.add(billreturn);
 				}
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("Get All Bills Method execute time", stopwatch.getTime());
 				return ResponseEntity.ok().body(returnList);
 			} else {
 				return ResponseEntity.status(401).build();
@@ -398,6 +419,9 @@ public class UserController {
 	public ResponseEntity<BillReturn> deleteBill(@PathVariable(value = "id") UUID id,
 			@RequestHeader HttpHeaders headers) {
 		try {
+			LOGGER.info("Logging in delete bill method method test");
+			statsDclient.incrementCounter("deleteBill");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -430,6 +454,8 @@ public class UserController {
 							filerepository.delete(filevar);
 							java.io.File fileio = new java.io.File(filevar.getUrl());
 							fileio.delete();
+							stopwatch.stop();
+							statsDclient.recordExecutionTime("Delete Bill Method execute time", stopwatch.getTime());
 							return ResponseEntity.status(204).build();
 						}
 					}
@@ -454,6 +480,9 @@ public class UserController {
 			@PathVariable(value = "id") UUID id, @RequestHeader HttpHeaders headers) {
 
 		try {
+			LOGGER.info("Logging in create bill attachment method method test");
+			statsDclient.incrementCounter("createBillAttachment");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -509,6 +538,8 @@ public class UserController {
 								String jsonInString = gson.toJson(filevar, File.class);
 								availableBill.setAttachment(jsonInString);
 								billrepository.save(availableBill);
+								stopwatch.stop();
+								statsDclient.recordExecutionTime("Create Bill attachment Method execute time", stopwatch.getTime());
 								return ResponseEntity.status(201).body(filereturn);
 							}
 							else {
@@ -527,6 +558,8 @@ public class UserController {
 								String jsonInString = gson.toJson(filevar, File.class);
 								availableBill.setAttachment(jsonInString);
 								billrepository.save(availableBill);
+								stopwatch.stop();
+								statsDclient.recordExecutionTime("Create Bill attachment Method execute time", stopwatch.getTime());
 								return ResponseEntity.status(201).body(filereturn);
 							}
 							
