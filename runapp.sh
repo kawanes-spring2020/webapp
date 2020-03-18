@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 echo 'Starting Spring Boot'
 sudo kill -9 $(sudo lsof -t -i:8080)
-cd '/home/ubuntu/webapp'
+cd /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.d/
 sudo rm -rf file_config.json
+cd '/home/ubuntu/webapp'
 sudo cp -r file_config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.d/
 sudo systemctl restart amazon-cloudwatch-agent
 sudo mvn clean package
