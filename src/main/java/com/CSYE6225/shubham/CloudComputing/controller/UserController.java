@@ -49,19 +49,25 @@ import com.CSYE6225.shubham.CloudComputing.repository.UserRepository;
 import com.CSYE6225.shubham.CloudComputing.service.AmazonClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.timgroup.statsd.StatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/v2")
 public class UserController {
 	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/assets/";
 	private Gson gson = new Gson();
+	private static final Logger LOGGER=LoggerFactory.getLogger(UserController.class);
 
 	private AmazonClient amazonClient;
-
-    @Autowired
-    UserController(AmazonClient amazonClient) {
-        this.amazonClient = amazonClient;
-    }
+	@Autowired
+        private StatsDClient statsDclient;
+        
+    	@Autowired
+    	UserController(AmazonClient amazonClient) {
+		this.amazonClient = amazonClient;
+    	}
 
 	@Autowired
 	UserRepository repository;
@@ -80,6 +86,8 @@ public class UserController {
 	@GetMapping("/user/self")
 	public ResponseEntity<UserReturn> getUser(@RequestHeader HttpHeaders headers) {
 		try {
+			LOGGER.info("Logging in get user method");
+			statsDclient.incrementCounter("getuser");
 			String username = "";// username commnet
 			String password = "";
 			User _user = null;
@@ -114,6 +122,8 @@ public class UserController {
 	@PostMapping(value = "/user")
 	public ResponseEntity<UserReturn> postUser(@RequestBody User user) {
 		System.out.println("inside" + user);
+		LOGGER.info("Logging in post user method");
+		statsDclient.incrementCounter("postuser");
 		String regex = "^(.+)@(.+)$";
 
 		Pattern pattern = Pattern.compile(regex);
@@ -188,6 +198,8 @@ public class UserController {
 	@PostMapping(value = "/bill/")
 	public ResponseEntity<BillReturn> createBill(@RequestBody Bill bill, @RequestHeader HttpHeaders headers) {
 		try {
+			LOGGER.info("Logging in create bill method method");
+			statsDclient.incrementCounter("createbill");
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
