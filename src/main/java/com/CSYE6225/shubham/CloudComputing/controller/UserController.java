@@ -57,7 +57,7 @@ import org.apache.commons.lang3.time.StopWatch;
 @RestController
 @RequestMapping("/v2")
 public class UserController {
-	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/assets/";
+	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/target/assets/";
 	private Gson gson = new Gson();
 	private static final Logger LOGGER=LoggerFactory.getLogger(UserController.class);
 
@@ -101,6 +101,7 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in get user method");
 			statsDclient.incrementCounter("getuser");
+			StopWatch stopwatch = StopWatch.createStarted();
 	        
 			String username = "";// username commnet
 			String password = "";
@@ -121,10 +122,13 @@ public class UserController {
 
 				UserReturn returnUser = new UserReturn(_user.getId(), _user.getEmail(), _user.getFirst_name(),
 						_user.getLast_name(), _user.getAccount_created(), _user.getAccount_updated());
-				statsDclient.recordExecutionTimeToNow("GetUser Method execute time", System.currentTimeMillis());
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("GetUser Method execute time", stopwatch.getTime());
 				return ResponseEntity.ok().body(returnUser);
 
 			} else {
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("GetUser Method execute time", stopwatch.getTime());
 				return ResponseEntity.status(401).build();
 			}
 			
@@ -139,6 +143,7 @@ public class UserController {
 	public ResponseEntity<UserReturn> postUser(@RequestBody User user) {
 		LOGGER.info("Logging in post user method");
 		statsDclient.incrementCounter("postuser");
+		StopWatch stopwatch = StopWatch.createStarted();
         
 		String regex = "^(.+)@(.+)$";
 
@@ -162,7 +167,8 @@ public class UserController {
 		UserReturn returnUser = new UserReturn(_user.getId(), _user.getEmail(), _user.getFirst_name(),
 				_user.getLast_name(), _user.getAccount_created(), _user.getAccount_updated());
 		System.out.println("reached" + returnUser);
-		statsDclient.recordExecutionTimeToNow("Post User Method execute time", System.currentTimeMillis());
+		stopwatch.stop();
+		statsDclient.recordExecutionTime("Post User Method execute time", stopwatch.getTime());
 		return ResponseEntity.ok().body(returnUser);
 	}
 
@@ -217,6 +223,7 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in create bill method method test");
 			statsDclient.incrementCounter("createbill");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -242,7 +249,8 @@ public class UserController {
 						billvar.getUpdated_ts(), owner_id, bill.getVendor(), bill.getBill_date(), bill.getDue_date(),
 						bill.getAmount_due(), bill.getPayment_status(), bill.getCategories(),
 						gson.fromJson(billvar.getAttachment(), FileReturn.class));
-				statsDclient.recordExecutionTimeToNow("Create Bill Method execute time", System.currentTimeMillis());
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("Create Bill Method execute time", stopwatch.getTime());
 				return ResponseEntity.status(201).body(billreturn);
 			}
 		} catch (Exception e) {
@@ -258,6 +266,7 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in get bills method method test");
 			statsDclient.incrementCounter("getAllBills");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -288,7 +297,8 @@ public class UserController {
 
 					returnList.add(billreturn);
 				}
-				statsDclient.recordExecutionTimeToNow("Get all bills Method execute time", System.currentTimeMillis());
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("Get All Bills Method execute time", stopwatch.getTime());
 				return ResponseEntity.ok().body(returnList);
 			} else {
 				return ResponseEntity.status(401).build();
@@ -409,6 +419,7 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in delete bill method method test");
 			statsDclient.incrementCounter("deleteBill");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -441,7 +452,8 @@ public class UserController {
 							filerepository.delete(filevar);
 							java.io.File fileio = new java.io.File(filevar.getUrl());
 							fileio.delete();
-							statsDclient.recordExecutionTimeToNow("Delete bill Method execute time", System.currentTimeMillis());
+							stopwatch.stop();
+							statsDclient.recordExecutionTime("Delete Bill Method execute time", stopwatch.getTime());
 							return ResponseEntity.status(204).build();
 						}
 					}
@@ -468,6 +480,7 @@ public class UserController {
 		try {
 			LOGGER.info("Logging in create bill attachment method method test");
 			statsDclient.incrementCounter("createBillAttachment");
+			StopWatch stopwatch = StopWatch.createStarted();
 			String username = "";
 			String password = "";
 			UUID owner_id = null;
@@ -523,7 +536,8 @@ public class UserController {
 								String jsonInString = gson.toJson(filevar, File.class);
 								availableBill.setAttachment(jsonInString);
 								billrepository.save(availableBill);
-								statsDclient.recordExecutionTimeToNow("Create Bill attachment Method execute time", System.currentTimeMillis());
+								stopwatch.stop();
+								statsDclient.recordExecutionTime("Create Bill attachment Method execute time", stopwatch.getTime());
 								return ResponseEntity.status(201).body(filereturn);
 							}
 							else {
@@ -542,7 +556,8 @@ public class UserController {
 								String jsonInString = gson.toJson(filevar, File.class);
 								availableBill.setAttachment(jsonInString);
 								billrepository.save(availableBill);
-								statsDclient.recordExecutionTimeToNow("Create bill attachment Method execute time", System.currentTimeMillis());
+								stopwatch.stop();
+								statsDclient.recordExecutionTime("Create Bill attachment Method execute time", stopwatch.getTime());
 								return ResponseEntity.status(201).body(filereturn);
 							}
 							
