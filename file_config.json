@@ -1,6 +1,6 @@
 {
   "agent": {
-    "metrics_collection_interval": 60, // new file
+    "metrics_collection_interval": 10,
     "logfile": "/var/log/amazon-cloudwatch-agent.log"
   },
   "logs": {
@@ -10,7 +10,7 @@
           {
             "file_path": "/var/log/csye6225.log",
             "log_group_name": "application_logs",
-            "log_stream_name": "{instance_id}"
+            "log_stream_name": "webapp"
           }
         ]
       }
@@ -19,18 +19,11 @@
   "metrics": {
     "metrics_collected": {
       "statsd": {  
-        "metrics_aggregation_interval": 60,
+        "service_address": ":8125",
         "metrics_collection_interval": 10,
-        "service_address": ":8125"
-      },
-      "cpu": {
-        "measurement": [
-          "cpu_usage_idle",
-          "cpu_usage_iowait",
-          "cpu_usage_user",
-          "cpu_usage_system"
-        ],
-        "totalcpu": true 
+        "metrics_aggregation_interval": 0
+        
+        
       }
     }
   }

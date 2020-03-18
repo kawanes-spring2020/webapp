@@ -81,7 +81,19 @@ public class UserController {
 	@Autowired
 	PasswordEncoder encoder;
 	
-	
+	@GetMapping("/test")
+	public void testUser() {
+		try {
+			LOGGER.info("Logging in test user method");
+			statsDclient.incrementCounter("testUser");
+			statsDclient.recordExecutionTime("execute time", 25);
+			System.out.println("Test Endpoint");
+			
+		} catch (Exception e) {
+			
+		}
+
+	}
 
 	@GetMapping("/user/self")
 	public ResponseEntity<UserReturn> getUser(@RequestHeader HttpHeaders headers) {
