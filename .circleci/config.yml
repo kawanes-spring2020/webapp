@@ -29,7 +29,7 @@ jobs:
           -d $TEST_DATABASE_URL \
           -c "INSERT INTO public.users(id, account_created, account_updated, email_address, first_name, last_name, password) VALUES ('4531d691-aed4-4298-8f32-b4b0369cd384', '2020-01-21T16:40:30.041269', '2020-01-21T16:40:30.041269', 'shubham1@gmail.com' , 'Shubham', 'Kawane','\$2a\$10\$jIC/u3nBvjW1lgX4o8QryuZd7Bfeq7mrA8UToCQ9UgpNsyz5W.Kjm') RETURNING password;"
       - run:
-          name: Build webapp without running tests
+          name: Build webappwithout running tests
           command: mvn install -Dmaven.test.skip=true
       - run: 
           name: Test webapp
@@ -52,12 +52,12 @@ jobs:
           aws-region: aws_region
       - aws-code-deploy/push-bundle:
           application-name: BillApplication
-          bundle-bucket: codedeploy1.shubhamkawane.me
+          bundle-bucket: codedeploy.shubhamkawane.me
           bundle-key: code_deploy_sample
       - aws-code-deploy/deploy-bundle:
           application-name: BillApplication
           deployment-group: BillApplicationDeploymentGroup
-          bundle-bucket: codedeploy1.shubhamkawane.me
+          bundle-bucket: codedeploy.shubhamkawane.me
           bundle-key: code_deploy_sample
 
 workflows:
