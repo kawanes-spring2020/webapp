@@ -7,9 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -52,11 +55,12 @@ import com.google.gson.JsonParser;
 import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.StopWatch;
 
 @RestController
 @RequestMapping("/v2")
-public class UserController {
+public class UserController implements Runnable {
 	private static String UPLOADED_FOLDER = System.getProperty("user.dir")+"/assets/";
 	private Gson gson = new Gson();
 	private static final Logger LOGGER=LoggerFactory.getLogger(UserController.class);
