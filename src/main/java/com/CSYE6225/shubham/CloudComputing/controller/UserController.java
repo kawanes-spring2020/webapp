@@ -66,8 +66,9 @@ public class UserController {
         private StatsDClient statsDclient;
         
     	@Autowired
-    	UserController(AmazonClient amazonClient) {
+    	UserController(AmazonClient amazonClient,BillRepository billrepository) {
 		this.amazonClient = amazonClient;
+		this.billrepository = billrepository;
     	}
 
 	@Autowired
@@ -314,6 +315,110 @@ public class UserController {
 			return ResponseEntity.badRequest().body(null);
 		}
 	}
+
+	@GetMapping(value = "/bills/due/{noOfDays}")
+	public ResponseEntity<String> getBillsDue(@PathVariable(value = "noOfDays") int noOfDays,@RequestHeader HttpHeaders headers) {
+		try {
+			System.out.println(noOfDays);
+			LOGGER.info("Logging in get all due bills method method test");
+			statsDclient.incrementCounter("getAllBillsDue");
+			StopWatch stopwatch = StopWatch.createStarted();
+			String username = "";
+			String password = "";
+			UUID owner_id = null;
+			User _user = null;
+			List<Bill> tempBill = new ArrayList<Bill>();
+			List<BillReturn> returnList = new ArrayList<BillReturn>();
+			final String authorization = headers.getFirst(HttpHeaders.AUTHORIZATION);
+			if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
+				String base64Credentials = authorization.substring("Basic".length()).trim();
+				byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+				String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+				final String[] values = credentials.split(":", 2);
+				System.out.println(values[0] + "" + values[1]);
+				username = values[0];
+				password = values[1];
+			}
+			_user = repository.findByEmail(username);
+			if (_user != null && encoder.matches(password, _user.getPassword())) {
+				this.amazonClient.sendMessage(username, noOfDays,_user.getId());
+				stopwatch.stop();
+				statsDclient.recordExecutionTime("Get All Bills Method execute time", stopwatch.getTime());
+				Thread managerthread = new Thread(new UserController(this.amazonClient,this.billrepository),"T2");
+		        managerthread.start();
+
+				return ResponseEntity.ok().body("Request Processing!! You will receive an email with response.");
+			} else {
+				return ResponseEntity.status(401).build();
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+	
+	 @Override
+		public void run() {
+		 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		 	List<Bill> tempBill = new ArrayList<Bill>();
+		 	List<String> returnList = new ArrayList<String>();
+			String output = this.amazonClient.receiveAndDelete();
+			String email = output.split(":")[0];
+			int days = Integer.parseInt(output.split(":")[1]);
+			UUID user_id = UUID.fromString((output.split(":")[2]));
+			tempBill = billrepository.findByOwner(user_id);
+			System.out.println(tempBill);
+			Date required = DateUtils.addDays(new Date(), days);
+//			long DAY_IN_MS = 1000 * 60 * 60 * 24;
+//			Date required = new Date(System.currentTimeMillis() + (days * DAY_IN_MS));
+			String vala = null;
+			Date to = new Date();
+			Date today = null;
+			String requiredToday = sdf.format(to);
+			vala = sdf.format(required);
+			System.out.println(vala);
+			Date requiredDate = null;
+			try {
+				requiredDate = sdf.parse(vala);
+				today = sdf.parse(requiredToday);
+				
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(requiredDate);
+			
+			
+			for (Bill billvar : tempBill) {
+				String val = "";
+				String due = billvar.getDue_date();
+				Date dueDate = null;
+				try {
+					dueDate = sdf.parse(due);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				BillReturn billreturn = new BillReturn(billvar.getId(), billvar.getCreated_ts(),
+						billvar.getUpdated_ts(), user_id, billvar.getVendor(), billvar.getBill_date(),
+						billvar.getDue_date(), billvar.getAmount_due(), billvar.getPayment_status(),
+						billvar.getCategories(), gson.fromJson(billvar.getAttachment(), FileReturn.class));
+				val = "http://prod.shubhamkawane.me/v2/bill/"+billvar.getId();
+				if(dueDate.compareTo(today)> 0) {
+					if(DateUtils.isSameDay(requiredDate, dueDate) || requiredDate.after(dueDate)) {
+						returnList.add(val);
+					}
+				}
+				
+				
+			}
+			returnList.add(email);
+			
+			this.amazonClient.publishSNSMessage(returnList.toString());
+		}
+
 
 	@GetMapping(value = "/bill/{id}")
 	public ResponseEntity<List<BillReturn>> getBill(@PathVariable(value = "id") UUID id,
