@@ -95,7 +95,7 @@ public class UserController implements Runnable {
 			statsDclient.incrementCounter("testUser");
 			System.out.println("Test Endpoint");
 			
-		ResponseEntity.noContent().body("Test User verified successfully");
+		return ResponseEntity.status(200).body("Test User verified successfully");
 
 	}
 
