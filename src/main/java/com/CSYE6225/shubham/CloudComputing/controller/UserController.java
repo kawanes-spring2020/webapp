@@ -88,16 +88,14 @@ public class UserController implements Runnable {
 	PasswordEncoder encoder;
 	
 	@GetMapping("/test")
-	public void testUser() {
-		try {
+	public ResponseEntity<String> testUser() {
+		
 			LOGGER.info("Logging in test user method");
 			statsDclient.recordExecutionTimeToNow("Execution time test", System.currentTimeMillis());
 			statsDclient.incrementCounter("testUser");
 			System.out.println("Test Endpoint");
 			
-		} catch (Exception e) {
-			
-		}
+		ResponseEntity.noContent().body("Test User verified successfully");
 
 	}
 
